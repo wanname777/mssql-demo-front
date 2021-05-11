@@ -15,6 +15,7 @@ import TeacherCourseTable from "@/components/teacher/TeacherCourseTable";
 import TeacherMyCourseTable from "@/components/teacher/TeacherMyCourseTable";
 import TeacherInfo from "@/components/teacher/TeacherInfo";
 import Login from "@/views/Login";
+import CourseForm from "@/components/manager/CourseForm";
 
 const routes = [
     {
@@ -34,6 +35,11 @@ const routes = [
                         path: "course",
                         name: "CourseTable",
                         component: CourseTable,
+                    },
+                    {
+                        path: "courseForm",
+                        name: "CourseForm",
+                        component: CourseForm
                     },
                     {
                         path: "teacher",

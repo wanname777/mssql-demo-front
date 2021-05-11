@@ -48,9 +48,9 @@
             width="auto">
         </el-table-column>
         <el-table-column
-          prop="isOpen"
-          label="是否开设"
-          width="auto">
+            prop="isOpen"
+            label="是否开设"
+            width="auto">
         </el-table-column>
         <el-table-column
             prop="limitNumber"
@@ -73,9 +73,9 @@
             width="auto">
           <template #default="scope">
             <el-button @click="handleClick(scope.row)" type="text"
-                       size="small">选择
+                       size="small">编辑
             </el-button>
-            <el-button type="text" size="small">编辑</el-button>
+            <!--<el-button type="text" size="small">编辑</el-button>-->
             <el-button type="text" size="small">删除</el-button>
           </template>
         </el-table-column>
@@ -83,34 +83,47 @@
     </el-main>
   </el-container>
   <!--<el-main>-->
-
-
+  <!--<el-dialog title="课程编辑" v-model="dialogVisible" width="30%">-->
+  <!--  <course-form style="text-align:left;"></course-form>-->
+  <!--</el-dialog>-->
   <!--</el-main>-->
 </template>
 
 <script>
 import axios from "axios";
+import router from "@/router";
+import store from "@/store";
+// import CourseForm from "@/components/manager/CourseForm";
 
 export default {
   name: "CourseTable",
+  // components: {CourseForm},
   data() {
+
     const item = {
       date: "2016-05-02",
       name: "王小虎",
       address: "上海市普陀区金沙江路 1518 弄",
     };
     return {
+      // dialogVisible: false,
       activeIndex: "1",
       tableData: Array(20).fill(item),
+
     };
   },
   methods: {
     handleClick(row) {
       console.log(row);
+      store.state.tempData = row;
+      // this.dialogVisible = true;
+      // router.push("/manager/courseForm");
+      router.push("./courseForm");
     },
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
     },
+
   },
   mounted() {
     axios
@@ -118,6 +131,11 @@ export default {
         .then(response => {
           console.log(response.data.data.data);
           this.tableData = response.data.data.data;
+          for (let tableDataKey in this.tableData) {
+            // console.log(tableDataKey);
+            this.tableData[tableDataKey].isOpen = (this.tableData[tableDataKey].isOpen === 1);
+          }
+          // console.log(this.tableData);
         })
         .catch(function (error) { // 请求失败处理
           console.log(error);

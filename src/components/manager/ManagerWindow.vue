@@ -25,7 +25,7 @@
 
     <el-container>
 
-      <el-main style="padding: 0">
+      <el-main >
 
         <router-view/>
       </el-main>
