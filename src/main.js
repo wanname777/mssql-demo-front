@@ -13,5 +13,7 @@ app.use(ElementPlus);
 app.use(VueAxios, axios);
 app.use(qs);
 app.mount("#app");
+
+//axios global settings
 axios.defaults.baseURL = "http://localhost:8081";
 axios.defaults.withCredentials = true;
