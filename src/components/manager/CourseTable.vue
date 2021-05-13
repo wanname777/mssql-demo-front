@@ -23,6 +23,9 @@
     </el-header>
     <el-main>
       <!--todo:缺少搜索按钮-->
+      <div style="text-align:right;">
+        <el-button type="primary" @click="handleClick(null)">添加新课程</el-button>
+      </div>
       <el-table
           :data="tableData"
           border
@@ -76,7 +79,9 @@
                        size="small">编辑
             </el-button>
             <!--<el-button type="text" size="small">编辑</el-button>-->
-            <el-button type="text" size="small">删除</el-button>
+            <el-button type="text" size="small" @click="deleteOne(scope.row)">
+              删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -113,6 +118,7 @@ export default {
     };
   },
   methods: {
+    //通过store全局变量传递修改课程时的参数，并跳转到修改页面
     handleClick(row) {
       console.log(row);
       store.state.tempData = row;
@@ -120,21 +126,40 @@ export default {
       // router.push("/manager/courseForm");
       router.push("./courseForm");
     },
+    //从数据库和列表中删除当前课程
+    deleteOne(row) {
+      console.log(row);
+      axios.get("/mssqldemoback/course/deleteOne", {
+        params: {
+          id: row.id,
+        },
+      }).then(response => {
+        console.log(response);
+        if (response.data.code === 200) {
+          let i = this.tableData.indexOf(row);
+          this.tableData.splice(i, 1);
+        }
+      }).catch(reason => {
+        console.log(reason);
+      });
+
+    },
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
     },
 
   },
   mounted() {
+    //挂载时获取所有课程信息
     axios
         .get("/mssqldemoback/course/selectAll")
         .then(response => {
           console.log(response.data.data.data);
           this.tableData = response.data.data.data;
-          for (let tableDataKey in this.tableData) {
-            // console.log(tableDataKey);
-            this.tableData[tableDataKey].isOpen = (this.tableData[tableDataKey].isOpen === 1);
-          }
+          // for (let tableDataKey in this.tableData) {
+          // console.log(tableDataKey);
+          // this.tableData[tableDataKey].isOpen = (this.tableData[tableDataKey].isOpen === 1);
+          // }
           // console.log(this.tableData);
         })
         .catch(function (error) { // 请求失败处理
