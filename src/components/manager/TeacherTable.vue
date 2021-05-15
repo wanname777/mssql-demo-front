@@ -45,10 +45,13 @@
             label="年龄"
             width="auto">
         </el-table-column>
+        <!--todo:做完图片与性别的传递，我们就休息一下吧，曾经那个爱着王旭阳的张兴宇死了-->
+        <!--todo:更多的查询内容就之后再说吧-->
         <el-table-column
             prop="sex"
             label="性别"
-            width="auto">
+            width="auto"
+            :formatter="formatRole">
         </el-table-column>
         <el-table-column
             prop="title"
@@ -64,6 +67,9 @@
             prop="img"
             label="图片"
             width="auto">
+          <template #default="scope">
+            <el-image :src="require('../../assets/'+scope.row.img+'.png')" alt="123"></el-image>
+          </template>
         </el-table-column>
         <el-table-column
             fixed="right"
@@ -74,7 +80,9 @@
                        size="small">编辑
             </el-button>
             <!--<el-button type="text" size="small">编辑</el-button>-->
-            <el-button type="text" size="small" @click="deleteOne(scope.row)">删除</el-button>
+            <el-button type="text" size="small" @click="deleteOne(scope.row)">
+              删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -98,10 +106,15 @@ export default {
       date: "2016-05-02",
       name: "王小虎",
       address: "上海市普陀区金沙江路 1518 弄",
+      img:"logo"
     };
     return {
       activeIndex: "1",
       tableData: Array(20).fill(item),
+      urls: [
+        '@/assets/logo.png',
+
+      ]
     };
   },
   methods: {
@@ -127,6 +140,9 @@ export default {
       }).catch(reason => {
         console.log(reason);
       });
+    },
+    formatRole: function (row) {
+      return row.sex === 0 ? "男" : "女";
     },
     handleSelect(key, keyPath) {
       console.log(key, keyPath);

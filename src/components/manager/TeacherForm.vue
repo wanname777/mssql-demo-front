@@ -25,8 +25,14 @@
                 v-model.number="ruleForm.age"></el-input>
     </el-form-item>
     <!--todo:性别只能处理01-->
+    <!--<el-form-item label="性别" prop="sex" >-->
+    <!--  <el-input v-model="ruleForm.sex"></el-input>-->
+    <!--</el-form-item>-->
     <el-form-item label="性别" prop="sex">
-      <el-input v-model="ruleForm.sex"></el-input>
+      <el-select v-model="ruleForm.sex" placeholder="请选择性别" >
+        <el-option label="男" value="0"></el-option>
+        <el-option label="女" value="1"></el-option>
+      </el-select>
     </el-form-item>
     <!--<el-col :span="11">-->
     <!--  <el-form-item prop="date1">-->
@@ -54,6 +60,24 @@
     <!--todo:无法处理图片-->
     <el-form-item label="图片" prop="img">
       <el-input v-model="ruleForm.img"></el-input>
+    </el-form-item>
+    <el-form-item label="图片" prop="img">
+      <el-upload
+          class="upload-demo"
+          action="https://jsonplaceholder.typicode.com/posts/"
+          :on-preview="handlePreview"
+          :on-remove="handleRemove"
+          :before-remove="beforeRemove"
+          multiple
+          :limit="3"
+          :on-exceed="handleExceed"
+          :file-list="fileList"
+      >
+        <el-button size="small" type="primary">点击上传</el-button>
+        <template #tip>
+          <div class="el-upload__tip">只能上传 jpg/png 文件，且不超过 500kb</div>
+        </template>
+      </el-upload>
     </el-form-item>
     <!--<el-form-item label="是否开设" prop="type">-->
     <!--  <el-switch v-model="ruleForm.isOpen" :active-value="1"-->
@@ -232,6 +256,7 @@ export default {
         //   {validator: checkAge, trigger: "blur"},
         // ],
       },
+      fileList: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}]
     };
   },
   methods: {
@@ -261,6 +286,9 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
+    formatRole: function( row) {
+      return row.sex === 1 ? "男" : row.sex === 0 ? "女" : "aaa";
+    },
     //返回course页
     goBack() {
       // console.log("go back");
@@ -282,7 +310,18 @@ export default {
         type: "error",
       });
     },
-
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+    },
+    handlePreview(file) {
+      console.log(file);
+    },
+    handleExceed(files, fileList) {
+      this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+    },
+    beforeRemove(file) {
+      return this.$confirm(`确定移除 ${ file.name }？`);
+    }
   },
   mounted() {
     // 混乱的全局变量存储。。
