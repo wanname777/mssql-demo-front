@@ -16,6 +16,9 @@ import TeacherMyCourseTable from "@/components/teacher/TeacherMyCourseTable";
 import TeacherInfo from "@/components/teacher/TeacherInfo";
 import Login from "@/views/Login";
 import CourseForm from "@/components/manager/CourseForm";
+import DepartmentForm from "@/components/manager/DepartmentForm";
+import StudentForm from "@/components/manager/StudentForm";
+import TeacherForm from "@/components/manager/TeacherForm";
 
 const routes = [
     {
@@ -47,14 +50,29 @@ const routes = [
                         component: TeacherTable,
                     },
                     {
+                        path: "teacherForm",
+                        name: "TeacherForm",
+                        component: TeacherForm,
+                    },
+                    {
                         path: "student",
                         name: "StudentTable",
                         component: StudentTable,
                     },
                     {
+                      path: "studentForm",
+                      name: "StudentForm",
+                      component: StudentForm,
+                    },
+                    {
                         path: "department",
                         name: "DepartmentTable",
                         component: DepartmentTable,
+                    },
+                    {
+                      path: "departmentForm",
+                      name: "DepartmentForm",
+                      component: DepartmentForm,
                     },
                     {
                         path: "user",

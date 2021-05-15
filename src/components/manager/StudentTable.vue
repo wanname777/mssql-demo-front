@@ -23,6 +23,9 @@
     </el-header>
     <el-main>
       <!--todo:缺少新增按钮-->
+      <div style="text-align:right;">
+        <el-button type="primary" @click="handleClick(null)">添加新学生</el-button>
+      </div>
       <el-table
           :data="tableData"
           border
@@ -73,10 +76,10 @@
             width="auto">
           <template #default="scope">
             <el-button @click="handleClick(scope.row)" type="text"
-                       size="small">选择
+                       size="small">编辑
             </el-button>
-            <el-button type="text" size="small">编辑</el-button>
-            <el-button type="text" size="small">删除</el-button>
+            <!--<el-button type="text" size="small">编辑</el-button>-->
+            <el-button type="text" size="small" @click="deleteOne(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -90,6 +93,8 @@
 
 <script>
 import axios from "axios";
+import store from "@/store";
+import router from "@/router";
 
 export default {
   name: "StudentTable",
@@ -107,6 +112,26 @@ export default {
   methods: {
     handleClick(row) {
       console.log(row);
+      store.state.tempData = row;
+      // this.dialogVisible = true;
+      // router.push("/manager/courseForm");
+      router.push("./studentForm");
+    },
+    deleteOne(row) {
+      console.log(row);
+      axios.get("/mssqldemoback/student/deleteOne", {
+        params: {
+          id: row.id,
+        },
+      }).then(response => {
+        console.log(response);
+        if (response.data.code === 200) {
+          let i = this.tableData.indexOf(row);
+          this.tableData.splice(i, 1);
+        }
+      }).catch(reason => {
+        console.log(reason);
+      });
     },
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
