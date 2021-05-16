@@ -22,7 +22,6 @@
       </el-menu>
     </el-header>
     <el-main>
-      <!--todo:缺少新增按钮-->
       <div style="text-align:right;">
         <el-button type="primary" @click="handleClick(null)">添加新系</el-button>
       </div>

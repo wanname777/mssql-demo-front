@@ -1,6 +1,5 @@
 <template>
   <!--todo:前端动态验证可太难了。。-->
-  <!--todo:增删改查没有实现-->
 
   <el-page-header icon="el-icon-arrow-left"
                   content="课程管理详情页面"

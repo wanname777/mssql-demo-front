@@ -104,7 +104,6 @@ export default {
               }),
           ).then(response => {
             console.log(response.data);
-            //todo:登录界面需要修改逻辑,回车也不能自动登录
             if (response.data.code === 200) {
               sessionStorage.setItem("isLogin", "1");
               sessionStorage.setItem("user", JSON.stringify(response.data.data.data));

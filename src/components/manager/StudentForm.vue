@@ -24,7 +24,6 @@
       <el-input type="number"
                 v-model.number="ruleForm.age"></el-input>
     </el-form-item>
-      <!--todo:性别只能处理01-->
       <el-form-item label="性别" prop="sex">
         <el-input v-model="ruleForm.sex"></el-input>
       </el-form-item>

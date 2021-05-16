@@ -22,7 +22,6 @@
       </el-menu>
     </el-header>
     <el-main>
-      <!--todo:缺少新增按钮-->
       <div style="text-align:right;">
         <el-button type="primary" @click="handleClick(null)">添加新学生</el-button>
       </div>
@@ -69,6 +68,10 @@
             prop="img"
             label="图片"
             width="auto">
+          <template #default="scope">
+            <!--<img src="../../../../../../../home">-->
+            <el-image :src="require('../../assets/'+scope.row.img+'.png')" alt="123"></el-image>
+          </template>
         </el-table-column>
         <el-table-column
             fixed="right"
@@ -103,6 +106,7 @@ export default {
       date: "2016-05-02",
       name: "王小虎",
       address: "上海市普陀区金沙江路 1518 弄",
+      img:""
     };
     return {
       activeIndex: "1",

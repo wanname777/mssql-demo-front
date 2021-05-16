@@ -22,7 +22,6 @@
       </el-menu>
     </el-header>
     <el-main>
-      <!--todo:缺少新增按钮-->
       <div style="text-align:right;">
         <el-button type="primary" @click="handleClick(null)">添加新学生</el-button>
       </div>
@@ -46,7 +45,7 @@
             width="auto">
         </el-table-column>
         <!--todo:做完图片与性别的传递，我们就休息一下吧，曾经那个爱着王旭阳的张兴宇死了-->
-        <!--todo:更多的查询内容就之后再说吧-->
+        <!--todo:图片可以展示了，性别也还不错，但是图片无法上传，一些搜索内容和个人信息修改没有做-->
         <el-table-column
             prop="sex"
             label="性别"
@@ -68,6 +67,7 @@
             label="图片"
             width="auto">
           <template #default="scope">
+            <!--<img src="../../../../../../../home">-->
             <el-image :src="require('../../assets/'+scope.row.img+'.png')" alt="123"></el-image>
           </template>
         </el-table-column>
