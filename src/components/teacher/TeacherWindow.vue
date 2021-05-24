@@ -2,7 +2,7 @@
   <el-container>
     <el-aside width="14%"
               style="background-color: rgb(238, 241, 246);text-align:left;">
-      <el-menu :default-active="activeIndex" router>
+      <el-menu :default-active="activePath" router>
         <el-menu-item index="/teacher/course">
           <i class="el-icon-message"></i>课程信息
         </el-menu-item>

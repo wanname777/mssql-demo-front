@@ -1,20 +1,23 @@
 <template>
-  <el-page-header icon="el-icon-arrow-left"
-                  content="课程管理详情页面"
+  <el-page-header content="课程管理详情页面"
+                  icon="el-icon-arrow-left"
                   @back="goBack"></el-page-header>
-  <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="auto"
-           class="demo-ruleForm">
-    <el-form-item label="系号" prop="id">
+  <el-form ref="ruleForm" :model="ruleForm" :rules="rules"
+           class="demo-ruleForm"
+           label-width="auto">
+    <el-form-item label="管理员账号" prop="id">
       <el-input v-model="ruleForm.id"></el-input>
     </el-form-item>
-    <el-form-item label="系名" prop="name">
+    <el-form-item label="管理员姓名" prop="name">
       <el-input v-model="ruleForm.name"></el-input>
     </el-form-item>
 
-    <el-form-item label="详细信息" prop="detail">
-      <el-input v-model="ruleForm.detail"></el-input>
+    <el-form-item label="密码" prop="pwd">
+      <el-input v-model="ruleForm.pwd"></el-input>
     </el-form-item>
-
+    <el-form-item label="邮箱" prop="email">
+      <el-input v-model="ruleForm.email"></el-input>
+    </el-form-item>
     <el-form-item style="text-align:right;">
       <el-button type="primary" @click="submitForm('ruleForm')">立即创建
       </el-button>
@@ -28,18 +31,17 @@ import axios from "axios";
 import qs from "qs";
 import router from "@/router";
 import {ElMessage} from "element-plus";
-import store from "@/store";
 
 export default {
-  name: "DepartmentForm",
+  name: "ManagerForm",
   data() {
 
     return {
       ruleForm: {
         id: "",
         name: "",
-        studentNumber:"",
-        detail:""
+        pwd: "",
+        email: "",
 
       },
       rules: {
@@ -50,7 +52,10 @@ export default {
           {required: true, message: "请输入课程名称", trigger: "blur"},
           // {min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur"},
         ],
-
+        email: [
+          {required: true, message: "请输入邮箱地址", trigger: "blur"},
+          {type: "email", message: "请输入正确的邮箱地址", trigger: ["blur", "change"]},
+        ],
       },
     };
   },
@@ -59,12 +64,12 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          axios.post("/mssqldemoback/department/saveOrUpdate", qs.stringify(this.ruleForm),
+          axios.post("/mssqldemoback/manager/saveOrUpdate", qs.stringify(this.ruleForm),
           ).then(response => {
             console.log(response);
             if (response.data.code === 200) {
               this.open1(response.data.message);
-              router.push("./department");
+              router.push("./user");
             } else if (response.data.code === 500) {
               this.open4(response.data.message);
             }
@@ -84,7 +89,7 @@ export default {
     //返回course页
     goBack() {
       // console.log("go back");
-      router.push("./department");
+      router.push("./manager");
     },
     // 展示成功信息
     open1(showMessage) {
@@ -105,13 +110,8 @@ export default {
 
   },
   mounted() {
-    // 混乱的全局变量存储。。
-    console.log(store.state.tempData);
-    //如果默认值为空，则说明是是save，此时数据为ruleForm原本的值
-    if (store.state.tempData !== null) {
-      this.ruleForm = store.state.tempData;
+    this.ruleForm = JSON.parse(sessionStorage.getItem("user"));
 
-    }
   },
 };
 </script>

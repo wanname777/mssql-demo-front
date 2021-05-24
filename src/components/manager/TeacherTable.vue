@@ -23,7 +23,7 @@
     </el-header>
     <el-main>
       <div style="text-align:right;">
-        <el-button type="primary" @click="handleClick(null)">添加新学生</el-button>
+        <el-button type="primary" @click="handleClick(null)">添加新老师</el-button>
       </div>
       <el-table
           :data="tableData"
@@ -65,10 +65,11 @@
         <el-table-column
             prop="img"
             label="图片"
-            width="auto">
+            width="100px">
           <template #default="scope">
-            <!--<img src="../../../../../../../home">-->
-            <el-image :src="require('../../assets/'+scope.row.img+'.png')" alt="123"></el-image>
+            <el-image :src="getImg(scope.row.img)"></el-image>
+            <!--todo:考虑img的原生形式-->
+            <!--<img v-if="imageUrl" :src="imageUrl" class="avatar" alt="请插入图片">-->
           </template>
         </el-table-column>
         <el-table-column
@@ -106,15 +107,15 @@ export default {
       date: "2016-05-02",
       name: "王小虎",
       address: "上海市普陀区金沙江路 1518 弄",
-      img:"logo"
+      img: "",
     };
     return {
       activeIndex: "1",
       tableData: Array(20).fill(item),
       urls: [
-        '@/assets/logo.png',
+        "@/assets/logo.png",
 
-      ]
+      ],
     };
   },
   methods: {
@@ -146,6 +147,9 @@ export default {
     },
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
+    },
+    getImg(path) {
+      return path === "" ? "" : require("@/assets/" + path);
     },
   },
   mounted() {

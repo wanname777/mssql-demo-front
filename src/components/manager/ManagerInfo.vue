@@ -24,7 +24,8 @@
     <el-main>
       <el-descriptions class="margin-top" title="个人信息" :column="2" border>
         <template #extra>
-          <el-button type="primary" size="small">操作</el-button>
+          <el-button size="small" type="primary" @click="handleClick">修改个人信息
+          </el-button>
         </template>
         <el-descriptions-item>
           <template #label>
@@ -64,6 +65,7 @@
 
 <script>
 import axios from "axios";
+import router from "@/router";
 
 export default {
   name: "ManagerInfo",
@@ -88,6 +90,7 @@ export default {
         })
         .then(response => {
           this.userData = response.data.data.data;
+          sessionStorage.setItem("user", JSON.stringify(response.data.data.data));
         })
         .catch(function (error) { // 请求失败处理
           console.log(error);
@@ -96,6 +99,7 @@ export default {
   methods: {
     handleClick(row) {
       console.log(row);
+      router.push("./userForm");
     },
     handleSelect(key, keyPath) {
       console.log(key, keyPath);

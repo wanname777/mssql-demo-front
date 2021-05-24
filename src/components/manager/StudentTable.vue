@@ -52,6 +52,7 @@
         <el-table-column
             prop="sex"
             label="性别"
+            :formatter="formatRole"
             width="auto">
         </el-table-column>
         <el-table-column
@@ -67,10 +68,9 @@
         <el-table-column
             prop="img"
             label="图片"
-            width="auto">
+            width="100px">
           <template #default="scope">
-            <!--<img src="../../../../../../../home">-->
-            <el-image :src="require('../../assets/'+scope.row.img+'.png')" alt="123"></el-image>
+            <el-image :src="getImg(scope.row.img)"></el-image>
           </template>
         </el-table-column>
         <el-table-column
@@ -82,7 +82,9 @@
                        size="small">编辑
             </el-button>
             <!--<el-button type="text" size="small">编辑</el-button>-->
-            <el-button type="text" size="small" @click="deleteOne(scope.row)">删除</el-button>
+            <el-button size="small" type="text" @click="deleteOne(scope.row)">
+              删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -111,6 +113,10 @@ export default {
     return {
       activeIndex: "1",
       tableData: Array(20).fill(item),
+      // urls: [
+      //   '@/assets/logo.png',
+      //
+      // ]
     };
   },
   methods: {
@@ -139,6 +145,12 @@ export default {
     },
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
+    },
+    getImg(path) {
+      return path === "" ? "" : require("@/assets/" + path);
+    },
+    formatRole: function (row) {
+      return row.sex === 0 ? "男" : "女";
     },
   },
   mounted() {

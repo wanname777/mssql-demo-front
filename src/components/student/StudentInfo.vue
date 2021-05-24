@@ -24,7 +24,8 @@
     <el-main>
       <el-descriptions class="margin-top" title="个人信息" :column="2" border>
         <template #extra>
-          <el-button type="primary" size="small">操作</el-button>
+          <el-button size="small" type="primary" @click="handleClick">修改个人信息
+          </el-button>
         </template>
         <el-descriptions-item>
           <template #label>
@@ -59,7 +60,7 @@
             <i class="el-icon-location-outline"></i>
             性别
           </template>
-          {{ userData.sex }}
+          {{ sexStr }}
         </el-descriptions-item>
         <el-descriptions-item>
           <template #label>
@@ -81,7 +82,7 @@
             <i class="el-icon-office-building"></i>
             照片
           </template>
-          {{ userData.img }}
+          <el-image v-if="imgUrl" :src="imgUrl" alt="图片"></el-image>
         </el-descriptions-item>
       </el-descriptions>
     </el-main>
@@ -90,12 +91,15 @@
 
 <script>
 import axios from "axios";
+import router from "@/router";
 // import router from "@/router";
 export default {
   name: "StudentInfo",
 
   data: function () {
     return {
+      imgUrl: "",
+      sexStr: "",
       userData: {
         id: "",
         name: "",
@@ -118,6 +122,10 @@ export default {
         })
         .then(response => {
           this.userData = response.data.data.data;
+          sessionStorage.setItem("user", JSON.stringify(this.userData));
+          this.imgUrl = this.userData.img === "" ? "" : require("@/assets/" + this.userData.img);
+          console.log(this.imgUrl);
+          this.sexStr = this.userData.sex === 0 ? "男" : "女";
         })
         .catch(function (error) { // 请求失败处理
           console.log(error);
@@ -126,6 +134,7 @@ export default {
   methods: {
     handleClick(row) {
       console.log(row);
+      router.push("./userForm");
     },
     handleSelect(key, keyPath) {
       console.log(key, keyPath);

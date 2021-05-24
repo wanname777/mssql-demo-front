@@ -19,6 +19,9 @@ import CourseForm from "@/components/manager/CourseForm";
 import DepartmentForm from "@/components/manager/DepartmentForm";
 import StudentForm from "@/components/manager/StudentForm";
 import TeacherForm from "@/components/manager/TeacherForm";
+import ManagerForm from "@/components/manager/ManagerForm";
+import StudentForm1 from "@/components/student/StudentForm1";
+import TeacherForm1 from "@/components/teacher/TeacherForm1";
 
 const routes = [
     {
@@ -70,14 +73,19 @@ const routes = [
                         component: DepartmentTable,
                     },
                     {
-                      path: "departmentForm",
-                      name: "DepartmentForm",
-                      component: DepartmentForm,
+                        path: "departmentForm",
+                        name: "DepartmentForm",
+                        component: DepartmentForm,
                     },
                     {
                         path: "user",
                         name: "ManagerInfo",
                         component: ManagerInfo,
+                    },
+                    {
+                        path: "userForm",
+                        name: "ManagerForm",
+                        component: ManagerForm,
                     },
                 ],
             },
@@ -101,6 +109,11 @@ const routes = [
                         name: "StudentInfo",
                         component: StudentInfo,
                     },
+                    {
+                        path: "userForm",
+                        name: "StudentForm1",
+                        component: StudentForm1,
+                    },
                 ],
             }, {
                 path: "teacher",
@@ -119,6 +132,11 @@ const routes = [
                         path: "user",
                         name: "TeacherInfo",
                         component: TeacherInfo,
+                    },
+                    {
+                        path: "userForm",
+                        name: "TeacherForm1",
+                        component: TeacherForm1,
                     },
                 ],
             },

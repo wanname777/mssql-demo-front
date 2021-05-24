@@ -1,30 +1,31 @@
 <template>
-  <el-page-header icon="el-icon-arrow-left"
-                  content="课程管理详情页面"
+  <el-page-header content="课程管理详情页面"
+                  icon="el-icon-arrow-left"
                   @back="goBack"></el-page-header>
-  <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="auto"
-           class="demo-ruleForm">
+  <el-form ref="ruleForm" :model="ruleForm" :rules="rules"
+           class="demo-ruleForm"
+           label-width="auto">
     <el-form-item label="学号" prop="id">
       <el-input v-model="ruleForm.id"></el-input>
     </el-form-item>
     <el-form-item label="姓名" prop="name">
       <el-input v-model="ruleForm.name"></el-input>
     </el-form-item>
-    <el-form-item label="系别" prop="dept">
-      <el-input v-model="ruleForm.dept"></el-input>
-    </el-form-item>
-
 
     <el-form-item label="年龄" prop="age" required>
-      <el-input type="number"
-                v-model.number="ruleForm.age"></el-input>
-    </el-form-item>
-    <el-form-item label="性别" prop="sex">
-      <el-input v-model="ruleForm.sex"></el-input>
+      <el-input v-model.number="ruleForm.age"
+                type="number"></el-input>
     </el-form-item>
 
-    <el-form-item label="总学分" prop="credit">
-      <el-input type="number" v-model.number="ruleForm.credit"></el-input>
+    <el-form-item label="性别" prop="sex">
+      <el-select v-model="ruleForm.sex" placeholder="请选择性别">
+        <el-option label="男" value="0"></el-option>
+        <el-option label="女" value="1"></el-option>
+      </el-select>
+    </el-form-item>
+
+    <el-form-item label="职称" prop="title">
+      <el-input v-model="ruleForm.title"></el-input>
     </el-form-item>
     <el-form-item label="密码" prop="pwd">
       <el-input v-model="ruleForm.pwd"></el-input>
@@ -57,10 +58,9 @@ import axios from "axios";
 import qs from "qs";
 import router from "@/router";
 import {ElMessage} from "element-plus";
-import store from "@/store";
 
 export default {
-  name: "StudentForm",
+  name: "TeacherForm1",
   data() {
 
     return {
@@ -68,11 +68,10 @@ export default {
       ruleForm: {
         id: "",
         name: "",
-        dept: "",
         age: "",
         sex: 0,
-        // teachingTime: "",
-        credit: "",
+
+        title: "",
         pwd: "",
         img: "",
 
@@ -85,9 +84,7 @@ export default {
           {required: true, message: "请输入课程名称", trigger: "blur"},
           // {min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur"},
         ],
-        dept: [
-          {required: true, message: "请输入系名", trigger: "blur"},
-        ],
+
         age: [
           {required: true, message: "请输入年龄", trigger: "blur"},
           {type: "number", message: "年龄必须为数字值", trigger: "blur"},
@@ -96,15 +93,12 @@ export default {
           {required: true, message: "请输入性别", trigger: "blur"},
         ],
 
-        credit: [
-          {required: true, message: "请输入学分", trigger: "blur"},
-          {type: "number", message: "学分必须为数字值", trigger: "blur"},
-        ],
         pwd: [
           {required: true, message: "请输入密码", trigger: "blur"},
         ],
 
       },
+
     };
   },
   methods: {
@@ -112,12 +106,12 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          axios.post("/mssqldemoback/student/saveOrUpdate", qs.stringify(this.ruleForm),
+          axios.post("/mssqldemoback/teacher/saveOrUpdate", qs.stringify(this.ruleForm),
           ).then(response => {
             console.log(response);
             if (response.data.code === 200) {
               this.open1(response.data.message);
-              router.push("./student");
+              router.push("./user");
             } else if (response.data.code === 500) {
               this.open4(response.data.message);
             }
@@ -134,10 +128,11 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
+
     //返回course页
     goBack() {
       // console.log("go back");
-      router.push("./student");
+      router.push("./user");
     },
     // 展示成功信息
     open1(showMessage) {
@@ -154,6 +149,9 @@ export default {
         message: showMessage,
         type: "error",
       });
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
     },
     handleAvatarSuccess(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw);
@@ -175,13 +173,7 @@ export default {
     },
   },
   mounted() {
-    // 混乱的全局变量存储。。
-    console.log(store.state.tempData);
-    //如果默认值为空，则说明是是save，此时数据为ruleForm原本的值
-    if (store.state.tempData !== null) {
-      this.ruleForm = store.state.tempData;
-
-    }
+    this.ruleForm = JSON.parse(sessionStorage.getItem("user"));
   },
 };
 </script>
