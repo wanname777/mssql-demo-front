@@ -75,6 +75,15 @@
           </template>
         </el-table-column>
       </el-table>
+      <div>
+        <el-pagination
+            :page-size="pageSize"
+            :total="pages"
+            background
+            layout="prev, pager, next"
+            @current-change="handleCurrentChange">
+        </el-pagination>
+      </div>
     </el-main>
   </el-container>
 </template>
@@ -92,11 +101,32 @@ export default {
       address: "上海市普陀区金沙江路 1518 弄",
     };
     return {
+      pages: 50,
+      pageSize: 10,
+      value: false,
       activeIndex: "1",
       tableData: Array(20).fill(item),
     };
   },
   methods: {
+    handleCurrentChange(val) {
+      console.log(val);
+      axios
+          .get("/mssqldemoback/course/selectAllOpened", {
+            params: {
+              current: val,
+              size: this.pageSize,
+            },
+          })
+          .then(response => {
+            console.log(response.data.data.data);
+            this.tableData = response.data.data.data.data;
+            this.pages = response.data.data.data.pages;
+          })
+          .catch(function (error) { // 请求失败处理
+            console.log(error);
+          });
+    },
     handleClick(row) {
       console.log(row);
       axios.get("/mssqldemoback/student-course/insertOneCourse", {
@@ -106,8 +136,8 @@ export default {
         },
       }).then(response => {
         console.log(response);
-        if (response.data.code===200){
-          this.open4("选课成功")
+        if (response.data.code === 200) {
+          this.open4("选课成功");
           let i = this.tableData.indexOf(row);
           this.tableData[i].chooseNumber++;
         }
@@ -124,14 +154,20 @@ export default {
         message: showMessage,
         type: "success",
       });
-    }
+    },
   },
   mounted() {
     axios
-        .get("/mssqldemoback/course/selectAllOpened")
+        .get("/mssqldemoback/course/selectAllOpened", {
+          params: {
+            current: 1,
+            size: this.pageSize,
+          },
+        })
         .then(response => {
           console.log(response.data.data.data);
-          this.tableData = response.data.data.data;
+          this.tableData = response.data.data.data.data;
+          this.pages = response.data.data.data.pages;
         })
         .catch(function (error) { // 请求失败处理
           console.log(error);

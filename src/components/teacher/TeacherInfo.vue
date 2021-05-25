@@ -75,7 +75,8 @@
             <i class="el-icon-office-building"></i>
             照片
           </template>
-          <el-image v-if="imgUrl" :src="imgUrl" alt="图片"></el-image>
+          <el-image v-if="imgUrl" :src="imgUrl" alt="图片"
+                    style="width: 100px;height: 100px;"></el-image>
         </el-descriptions-item>
       </el-descriptions>
     </el-main>
