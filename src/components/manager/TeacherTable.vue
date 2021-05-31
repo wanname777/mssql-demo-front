@@ -1,26 +1,26 @@
 <template>
   <el-container>
-    <el-header style="padding: 0">
-      <el-menu :default-active="activeIndex" class="el-menu-demo"
-               mode="horizontal" @select="handleSelect">
-        <el-menu-item index="1">处理中心</el-menu-item>
-        <el-submenu index="2">
-          <template #title>我的工作台</template>
-          <el-menu-item index="2-1">选项1</el-menu-item>
-          <el-menu-item index="2-2">选项2</el-menu-item>
-          <el-menu-item index="2-3">选项3</el-menu-item>
-          <el-submenu index="2-4">
-            <template #title>选项4</template>
-            <el-menu-item index="2-4-1">选项1</el-menu-item>
-            <el-menu-item index="2-4-2">选项2</el-menu-item>
-            <el-menu-item index="2-4-3">选项3</el-menu-item>
-          </el-submenu>
-        </el-submenu>
-        <el-menu-item index="3" disabled>消息中心</el-menu-item>
-        <el-menu-item index="4"><a href="https://www.ele.me" target="_blank">订单管理</a>
-        </el-menu-item>
-      </el-menu>
-    </el-header>
+    <!--<el-header style="padding: 0">-->
+    <!--  <el-menu :default-active="activeIndex" class="el-menu-demo"-->
+    <!--           mode="horizontal" @select="handleSelect">-->
+    <!--    <el-menu-item index="1">处理中心</el-menu-item>-->
+    <!--    <el-submenu index="2">-->
+    <!--      <template #title>我的工作台</template>-->
+    <!--      <el-menu-item index="2-1">选项1</el-menu-item>-->
+    <!--      <el-menu-item index="2-2">选项2</el-menu-item>-->
+    <!--      <el-menu-item index="2-3">选项3</el-menu-item>-->
+    <!--      <el-submenu index="2-4">-->
+    <!--        <template #title>选项4</template>-->
+    <!--        <el-menu-item index="2-4-1">选项1</el-menu-item>-->
+    <!--        <el-menu-item index="2-4-2">选项2</el-menu-item>-->
+    <!--        <el-menu-item index="2-4-3">选项3</el-menu-item>-->
+    <!--      </el-submenu>-->
+    <!--    </el-submenu>-->
+    <!--    <el-menu-item index="3" disabled>消息中心</el-menu-item>-->
+    <!--    <el-menu-item index="4"><a href="https://www.ele.me" target="_blank">订单管理</a>-->
+    <!--    </el-menu-item>-->
+    <!--  </el-menu>-->
+    <!--</el-header>-->
     <el-main>
       <div style="text-align:right;">
         <el-button type="primary" @click="handleClick(null)">添加新老师</el-button>
@@ -44,8 +44,6 @@
             label="年龄"
             width="auto">
         </el-table-column>
-        <!--todo:做完图片与性别的传递，我们就休息一下吧，曾经那个爱着王旭阳的张兴宇死了-->
-        <!--todo:图片可以展示了，性别也还不错，但是图片无法上传，一些搜索内容和个人信息修改没有做-->
         <el-table-column
             prop="sex"
             label="性别"
@@ -68,7 +66,6 @@
             width="100px">
           <template #default="scope">
             <el-image :src="getImg(scope.row.img)"></el-image>
-            <!--todo:考虑img的原生形式-->
             <!--<img v-if="imageUrl" :src="imageUrl" class="avatar" alt="请插入图片">-->
           </template>
         </el-table-column>
@@ -77,16 +74,26 @@
             label="操作"
             width="auto">
           <template #default="scope">
-            <el-button @click="handleClick(scope.row)" type="text"
+            <el-button type="success" @click="handleClick(scope.row)"
                        size="small">编辑
             </el-button>
             <!--<el-button type="text" size="small">编辑</el-button>-->
-            <el-button type="text" size="small" @click="deleteOne(scope.row)">
+            <el-button size="small" type="danger"
+                       @click="deleteOne(scope.row)">
               删除
             </el-button>
           </template>
         </el-table-column>
       </el-table>
+      <div>
+        <el-pagination
+            :page-size="pageSize"
+            :total="pages"
+            background
+            layout="prev, pager, next"
+            @current-change="handleCurrentChange">
+        </el-pagination>
+      </div>
     </el-main>
   </el-container>
   <!--<el-main>-->
@@ -110,6 +117,9 @@ export default {
       img: "",
     };
     return {
+      pages: 50,
+      pageSize: 10,
+      value: false,
       activeIndex: "1",
       tableData: Array(20).fill(item),
       urls: [
@@ -119,6 +129,24 @@ export default {
     };
   },
   methods: {
+    handleCurrentChange(val) {
+      console.log(val);
+      axios
+          .get("/mssqldemoback/teacher/selectAll", {
+            params: {
+              current: val,
+              size: this.pageSize,
+            },
+          })
+          .then(response => {
+            console.log(response.data.data.data);
+            this.tableData = response.data.data.data.data;
+            this.pages = response.data.data.data.pages;
+          })
+          .catch(function (error) { // 请求失败处理
+            console.log(error);
+          });
+    },
     handleClick(row) {
       console.log(row);
       store.state.tempData = row;
@@ -154,10 +182,16 @@ export default {
   },
   mounted() {
     axios
-        .get("/mssqldemoback/teacher/selectAll")
+        .get("/mssqldemoback/teacher/selectAll", {
+          params: {
+            current: 1,
+            size: this.pageSize,
+          },
+        })
         .then(response => {
           console.log(response.data.data.data);
-          this.tableData = response.data.data.data;
+          this.tableData = response.data.data.data.data;
+          this.pages = response.data.data.data.pages;
         })
         .catch(function (error) { // 请求失败处理
           console.log(error);

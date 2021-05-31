@@ -1,6 +1,6 @@
 <template>
   <el-page-header icon="el-icon-arrow-left"
-                  content="课程管理详情页面"
+                  content="教师信息"
                   @back="goBack"></el-page-header>
   <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="auto"
            class="demo-ruleForm">
@@ -45,7 +45,7 @@
     </el-form-item>
 
     <el-form-item style="text-align:right;">
-      <el-button type="primary" @click="submitForm('ruleForm')">立即创建
+      <el-button type="primary" @click="submitForm('ruleForm')">提交
       </el-button>
       <el-button @click="resetForm('ruleForm')">重置</el-button>
     </el-form-item>

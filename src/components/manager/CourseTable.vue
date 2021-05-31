@@ -1,26 +1,26 @@
 <template>
   <el-container>
-    <el-header style="padding: 0">
-      <el-menu :default-active="activeIndex" class="el-menu-demo"
-               mode="horizontal" @select="handleSelect">
-        <el-menu-item index="1">处理中心</el-menu-item>
-        <el-submenu index="2">
-          <template #title>我的工作台</template>
-          <el-menu-item index="2-1">选项1</el-menu-item>
-          <el-menu-item index="2-2">选项2</el-menu-item>
-          <el-menu-item index="2-3">选项3</el-menu-item>
-          <el-submenu index="2-4">
-            <template #title>选项4</template>
-            <el-menu-item index="2-4-1">选项1</el-menu-item>
-            <el-menu-item index="2-4-2">选项2</el-menu-item>
-            <el-menu-item index="2-4-3">选项3</el-menu-item>
-          </el-submenu>
-        </el-submenu>
-        <el-menu-item index="3" disabled>消息中心</el-menu-item>
-        <el-menu-item index="4"><a href="https://www.ele.me" target="_blank">订单管理</a>
-        </el-menu-item>
-      </el-menu>
-    </el-header>
+    <!--<el-header style="padding: 0">-->
+    <!--  <el-menu :default-active="activeIndex" class="el-menu-demo"-->
+    <!--           mode="horizontal" @select="handleSelect">-->
+    <!--    <el-menu-item index="1">处理中心</el-menu-item>-->
+    <!--    <el-submenu index="2">-->
+    <!--      <template #title>我的工作台</template>-->
+    <!--      <el-menu-item index="2-1">选项1</el-menu-item>-->
+    <!--      <el-menu-item index="2-2">选项2</el-menu-item>-->
+    <!--      <el-menu-item index="2-3">选项3</el-menu-item>-->
+    <!--      <el-submenu index="2-4">-->
+    <!--        <template #title>选项4</template>-->
+    <!--        <el-menu-item index="2-4-1">选项1</el-menu-item>-->
+    <!--        <el-menu-item index="2-4-2">选项2</el-menu-item>-->
+    <!--        <el-menu-item index="2-4-3">选项3</el-menu-item>-->
+    <!--      </el-submenu>-->
+    <!--    </el-submenu>-->
+    <!--    <el-menu-item index="3" disabled>消息中心</el-menu-item>-->
+    <!--    <el-menu-item index="4"><a href="https://www.ele.me" target="_blank">订单管理</a>-->
+    <!--    </el-menu-item>-->
+    <!--  </el-menu>-->
+    <!--</el-header>-->
     <el-main>
       <div style="text-align:right;">
         <el-button type="primary" @click="handleClick(null)">添加新课程</el-button>
@@ -52,6 +52,7 @@
         <el-table-column
             prop="isOpen"
             label="是否开设"
+            :formatter="formatRole"
             width="auto">
         </el-table-column>
         <el-table-column
@@ -61,7 +62,7 @@
         </el-table-column>
         <el-table-column
             prop="chooseNumber"
-            label="已选人数"
+            label="已选学生人数"
             width="auto">
         </el-table-column>
         <!--<el-table-column-->
@@ -74,16 +75,26 @@
             label="操作"
             width="auto">
           <template #default="scope">
-            <el-button @click="handleClick(scope.row)" type="text"
-                       size="small">编辑
+            <el-button size="small" type="success"
+                       @click="handleClick(scope.row)"> 修改
             </el-button>
             <!--<el-button type="text" size="small">编辑</el-button>-->
-            <el-button type="text" size="small" @click="deleteOne(scope.row)">
+            <el-button size="small" type="danger"
+                       @click="deleteOne(scope.row)">
               删除
             </el-button>
           </template>
         </el-table-column>
       </el-table>
+      <div>
+        <el-pagination
+            :page-size="pageSize"
+            :total="pages"
+            background
+            layout="prev, pager, next"
+            @current-change="handleCurrentChange">
+        </el-pagination>
+      </div>
     </el-main>
   </el-container>
   <!--<el-main>-->
@@ -110,6 +121,9 @@ export default {
       address: "上海市普陀区金沙江路 1518 弄",
     };
     return {
+      pages: 50,
+      pageSize: 10,
+      value: false,
       // dialogVisible: false,
       activeIndex: "1",
       tableData: Array(20).fill(item),
@@ -117,6 +131,27 @@ export default {
     };
   },
   methods: {
+    handleCurrentChange(val) {
+      console.log(val);
+      axios
+          .get("/mssqldemoback/course/selectAll", {
+            params: {
+              current: val,
+              size: this.pageSize,
+            },
+          })
+          .then(response => {
+            console.log(response.data.data.data);
+            this.tableData = response.data.data.data.data;
+            this.pages = response.data.data.data.pages;
+          })
+          .catch(function (error) { // 请求失败处理
+            console.log(error);
+          });
+    },
+    formatRole: function (row) {
+      return row.isOpen === 0 ? "否" : "是";
+    },
     //通过store全局变量传递修改课程时的参数，并跳转到修改页面
     handleClick(row) {
       console.log(row);
@@ -151,21 +186,23 @@ export default {
   mounted() {
     //挂载时获取所有课程信息
     axios
-        .get("/mssqldemoback/course/selectAll")
+        .get("/mssqldemoback/course/selectAll", {
+          params: {
+            current: 1,
+            size: this.pageSize,
+          },
+        })
         .then(response => {
           console.log(response.data.data.data);
-          this.tableData = response.data.data.data;
-          // for (let tableDataKey in this.tableData) {
-          // console.log(tableDataKey);
-          // this.tableData[tableDataKey].isOpen = (this.tableData[tableDataKey].isOpen === 1);
-          // }
-          // console.log(this.tableData);
+          this.tableData = response.data.data.data.data;
+          this.pages = response.data.data.data.pages;
         })
         .catch(function (error) { // 请求失败处理
           console.log(error);
         });
   },
-};
+}
+;
 </script>
 
 <style scoped>

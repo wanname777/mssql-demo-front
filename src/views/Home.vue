@@ -11,13 +11,13 @@
           <i class="el-icon-setting" style="margin-right: 15px"></i>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item @click="dialogVisible = true">
-                登录
-              </el-dropdown-item>
+              <!--<el-dropdown-item @click="dialogVisible = true">-->
+              <!--  登录-->
+              <!--</el-dropdown-item>-->
               <el-dropdown-item @click="dialogVisible1 = true">退出
               </el-dropdown-item>
-              <el-dropdown-item>修改密码
-              </el-dropdown-item>
+              <!--<el-dropdown-item>修改密码-->
+              <!--</el-dropdown-item>-->
             </el-dropdown-menu>
           </template>
         </el-dropdown>

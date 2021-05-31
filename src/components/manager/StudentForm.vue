@@ -1,6 +1,6 @@
 <template>
   <el-page-header icon="el-icon-arrow-left"
-                  content="课程管理详情页面"
+                  content="学生管理"
                   @back="goBack"></el-page-header>
   <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="auto"
            class="demo-ruleForm">
@@ -19,8 +19,13 @@
       <el-input type="number"
                 v-model.number="ruleForm.age"></el-input>
     </el-form-item>
+    <!--todo:性别出了点问题-->
+    <!--todo:想要换个颜色-->
     <el-form-item label="性别" prop="sex">
-      <el-input v-model="ruleForm.sex"></el-input>
+      <el-select v-model="ruleForm.sex" placeholder="请选择性别">
+        <el-option label="男" value="0"></el-option>
+        <el-option label="女" value="1"></el-option>
+      </el-select>
     </el-form-item>
 
     <el-form-item label="总学分" prop="credit">
@@ -45,7 +50,7 @@
     </el-form-item>
 
     <el-form-item style="text-align:right;">
-      <el-button type="primary" @click="submitForm('ruleForm')">立即创建
+      <el-button type="primary" @click="submitForm('ruleForm')">提交
       </el-button>
       <el-button @click="resetForm('ruleForm')">重置</el-button>
     </el-form-item>
